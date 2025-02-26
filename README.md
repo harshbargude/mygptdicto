@@ -1,6 +1,6 @@
 # MyGPTDicto
 
-**MyGPTDicto** is a Spring Boot application that leverages the LangChain Gemini Pro API to read CSV files and answer questions based on their content. It’s designed to provide an intelligent, conversational way to query data stored in CSV format.
+**MyGPTDicto** is a Spring Boot application that leverages the LangChain and Gemini Pro API to read CSV files and answer questions based on their content. It’s designed to provide an intelligent, conversational way to query data stored in CSV format.
 
 ## Features
 - Upload and process CSV files
