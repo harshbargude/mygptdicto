@@ -5,7 +5,7 @@
 ## Features
 - Upload and process CSV files
 - Ask natural language questions about the CSV data
-- Get accurate, AI-powered responses using the LangChain Gemini Pro API
+- Get accurate, AI-powered responses using the LangChain and Gemini Pro API
 
 ## Prerequisites
 Before running the project, ensure you have:
