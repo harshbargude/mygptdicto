@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Response</title>
+</head>
+<body>
+<h1>AI Response</h1>
+<h3>CSV Content (Preview):</h3>
+<pre th:text="${csvRequest.csvContent}"></pre>
+<h3>Agent Response:</h3>
+<p th:text="${csvRequest.response}"></p>
+
+<!--<p>Has Graph: <span th:text="${hasGraph}"></span></p>-->
+
+<div th:if="${hasGraph}" style="margin: 20px auto; text-align: center;">
+    <h3>Generated Graph</h3>
+    <img  th:src="@{'/' + ${graphFilename}}"  alt="Graph" style="max-width: 100%;"
+         onload="console.log('Image loaded successfully')"
+         onerror="console.log('Image failed to load')"/>
+</div>
+
+<h3>Ask Another Question:</h3>
+<form method="post" action="/ask">
+    <input type="text" name="question" placeholder="Ask another question about the data"/>
+    <button type="submit">Ask</button>
+</form>
+
+<div th:if="${error}" style="color: red;" th:text="${error}"></div>
+<p><a href="/">Upload a new file</a> | <a href="/reset">Reset Session</a></p>
+
+<script th:inline="javascript">
+    const csvContent = [[${csvRequest.csvContent}]];
+    console.log("CSV Content:", csvContent);
+</script>
+</body>
+</html>
