@@ -23,7 +23,7 @@ Before running the project, ensure you have:
 3. **Configure the API key**:
   Open src/main/resources/application.properties and add your Gemini Pro API key:
     ```bash
-    langchain.gemini.api-key=YOUR_API_KEY_HERE
+    google.api.key=YOUR_API_KEY_HERE
 4. **Build the project**:
     ```bash
     mvn clean install
