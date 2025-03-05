@@ -42,3 +42,5 @@ out/
 
 # Dependencies
 node_modules/
+
+service-account.json
