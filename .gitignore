@@ -39,3 +39,6 @@ build/
 # Target Directory
 target/
 out/
+
+# Dependencies
+node_modules/
