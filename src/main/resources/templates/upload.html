@@ -2,16 +2,39 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload CSV</title>
+    <link rel="stylesheet" data-th-href="@{'/css/output.css'}">
 </head>
-<body>
-<h1>Upload a CSV File</h1>
-<form method="post" enctype="multipart/form-data" action="/upload">
-    <input type="file" name="file" accept=".csv"/>
-    <input type="text" name="question" placeholder="Ask a question about the data"/>
-    <button type="submit">Upload</button>
-</form>
-<div th:if="${error}" style="color: red;" th:text="${error}"></div>
-<div th:if="${message}" style="color: green;" th:text="${message}"></div>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+<div class="bg-white shadow-lg rounded-xl p-6 w-full max-w-lg">
+    <h1 class="text-2xl font-bold text-gray-700 text-center mb-4">Upload a CSV File</h1>
+
+    <form method="post" enctype="multipart/form-data" action="/upload" class="space-y-4">
+        <!-- File Input -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-1">Select CSV File</label>
+            <input type="file" name="file" accept=".csv" class="block w-full border border-gray-300 p-2 rounded-lg">
+        </div>
+
+        <!-- Question Input -->
+        <div>
+            <label class="block text-gray-600 font-medium mb-1">Ask a Question About the Data</label>
+            <textarea class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      name="question" placeholder="Type your question here..."></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-all" type="submit">
+            Upload
+        </button>
+    </form>
+
+    <!-- Messages -->
+    <div th:if="${error}" class="mt-3 text-red-500 text-center" th:text="${error}"></div>
+    <div th:if="${message}" class="mt-3 text-green-500 text-center" th:text="${message}"></div>
+</div>
+
 </body>
 </html>

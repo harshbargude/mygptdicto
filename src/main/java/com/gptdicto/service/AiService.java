@@ -46,8 +46,23 @@ public class AiService {
             return "Error parsing CSV: " + e.getMessage();
         }
 
+//        String prompt = "You are an AI agent analyzing CSV data. Here is the data:\n" +
+//                parsedData.toString() +
+//                "\nQuestion: " + question +
+//                "\n\nWhen the question asks for a graph, plot, or chart, provide the response in this exact format: " +
+//                "[DATA: labels=[label1, label2, ...], values=[value1, value2, ...]], where labels and values are derived from the CSV data. " +
+//                "For example: [DATA: labels=[Jan, Feb, Mar], values=[10, 20, 30]]. " +
+//                "Otherwise, respond with plain text.";
         String prompt = "You are an AI agent analyzing CSV data. Here is the data:\n" +
-                parsedData.toString() + "\nQuestion: " + question ;
+                parsedData.toString() +
+                "\nQuestion: " + question +
+                "\n\nWhen the question asks for a graph, plot, or chart, provide the response in this exact format: " +
+                "[DATA: labels=[label1, label2, ...], values=[value1, value2, ...], xAxisLabel=\"X-axis description\", yAxisLabel=\"Y-axis description\"], " +
+                "where labels and values are derived from the CSV data, and xAxisLabel and yAxisLabel are dynamically determined from the question. " +
+                "For example, if the question is 'Plot sales by month', use: " +
+                "[DATA: labels=[Jan, Feb, Mar], values=[10, 20, 30], xAxisLabel=\"Month\", yAxisLabel=\"Sales\"]. " +
+                "Extract xAxisLabel from the 'by [X]' part of the question and yAxisLabel from the 'of [Y]' part, or use sensible defaults if unclear. " +
+                "Otherwise, respond with plain text.";
 
         String requestBody = String.format(
                 "{\"contents\": [{\"parts\": [{\"text\": \"%s\"}]}]}",
@@ -56,7 +71,7 @@ public class AiService {
 
         try {
             Mono<String> responseMono = webClient.post()
-                    .uri("/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}", googleApiKey)
+                    .uri("/v1beta/models/gemini-1.5-flash-8b:generateContent?key={apiKey}", googleApiKey)
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(requestBody)
                     .retrieve()
@@ -78,21 +93,27 @@ public class AiService {
             System.out.println("Graph request detected: " + isGraphRequest);
 
             if (isGraphRequest && responseText != null) {
-                Pattern pattern = Pattern.compile("\\[?DATA: labels=\\[(.*?)\\], values=\\[(.*?)\\]\\]?");
+//                Pattern pattern = Pattern.compile("\\[?DATA: labels=\\[(.*?)\\], values=\\[(.*?)\\]\\]?");
+                Pattern pattern = Pattern.compile(
+                        "\\[?DATA: labels=\\[(.*?)\\], values=\\[(.*?)\\], xAxisLabel=\"(.*?)\\\", yAxisLabel=\"(.*?)\\\"\\]?");
                 Matcher matcher = pattern.matcher(responseText);
                 if (matcher.find()) {
                     System.out.println("Labels: " + matcher.group(1));
                     System.out.println("Values: " + matcher.group(2));
+                    System.out.println("X-Axis Label: " + matcher.group(3));
+                    System.out.println("Y-Axis Label: " + matcher.group(4));
 
                     String[] labels = matcher.group(1).split(",");
                     String[] values = matcher.group(2).split(",");
+                    String xAxisLabel = matcher.group(3); // Extracted from response
+                    String yAxisLabel = matcher.group(4); // Extracted from response
 
                     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
                     // Extract dynamic titles from question
                     String graphTitle = extractGraphTitle(question);
-                    String yAxisLabel = extractYAxisLabel(question);
-                    String xAxisLabel = extractXAxisLabel(question);
+//                    String yAxisLabel = extractYAxisLabel(question);
+//                    String xAxisLabel = extractXAxisLabel(question);
 
                     for (int i = 0; i < labels.length; i++) {
                         dataset.addValue(Double.parseDouble(values[i].trim()), yAxisLabel, labels[i].trim());

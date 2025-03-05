@@ -32,5 +32,10 @@ build/
 ### VS Code ###
 .vscode/
 
-
+# property files and env
+.env
 .properties
+
+# Target Directory
+target/
+out/
